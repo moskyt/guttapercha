@@ -14,7 +14,7 @@ module LaTeX
           \\begin{minipage}[!t]{0.49\\textwidth}
             \\input{#{file2}}
           \\end{minipage}
-          \\caption{#{caption}}
+          #{chart_caption caption, options[:label]}
         \\end{figure}
     }
   end
@@ -23,9 +23,29 @@ module LaTeX
     %{
        \\begin{figure}#{options[:placement] ? "[#{options[:placement]}]" : ''}
           \\input{#{file1}}
-          \\caption{#{caption}}
+          #{chart_caption caption, options[:label]}
         \\end{figure}
     }
+  end
+  
+  def self.table(formats, data, options = {})
+    s = []
+    s << "\\begin{tabular}{#{'l' * formats.size}}"
+    s << "\\toprule"
+    if h = options[:headers]
+      s << h.map{|w| escape(w)} * " & " + " \\\\"
+      s << "\\midrule"
+    end
+    data.each do |row|
+      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
+    end
+    s << "\\bottomrule"
+    s << "\\end{tabular}"
+    s * "\n"
+  end
+  
+  def self.chart_caption(caption, label)    
+    "\\caption{#{label ? "\\label{#{label}} " : ""}#{caption}}"
   end
 
 end
