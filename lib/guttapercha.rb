@@ -47,5 +47,31 @@ module LaTeX
   def self.chart_caption(caption, label)    
     "\\caption{#{label ? "\\label{#{label}} " : ""}#{caption}}"
   end
+  
+  def self.document(filename, data, options = {})
+    File.open(filename, 'w') do |f|
+      f.puts %{
+      \\documentclass[a4paper,11pt]{article}
+
+      \\usepackage[utf8]{inputenc}
+      \\usepackage[rgb]{xcolor}
+      \\usepackage{placeins,array,lscape}
+      \\usepackage{color,tikz,pgfplots,float}
+      \\usepackage{graphicx,booktabs,hyperref}
+      \\usepackage[margin=1.5cm]{geometry}
+
+      \\usetikzlibrary{patterns}
+      \\pagestyle{empty}
+
+      \\begin{document}  
+      }
+      f.puts data
+      f.puts "\\end{document}"
+    end
+    if options[:build]
+      `pdflatex -halt-on-error #{filename}`
+      `pdflatex -halt-on-error #{filename}`
+    end
+  end
 
 end
