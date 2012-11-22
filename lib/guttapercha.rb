@@ -71,8 +71,10 @@ module LaTeX
       f.puts "\\end{document}"
     end
     if options[:build]
-      `pdflatex -halt-on-error #{filename}`
-      `pdflatex -halt-on-error #{filename}`
+      Dir.chdir(File.dirname filename) do
+        `pdflatex -halt-on-error #{filename}`
+        `pdflatex -halt-on-error #{filename}`
+      end
     end
   end
 
