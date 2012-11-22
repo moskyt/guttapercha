@@ -29,15 +29,17 @@ module LaTeX
   end
   
   def self.table(formats, data, options = {})
+    options = {:escape_headers => true}.merge(options)
     s = []
     s << "\\begin{tabular}{#{'l' * formats.size}}"
     s << "\\toprule"
     if h = options[:headers]
-      s << h.map{|w| escape(w)} * " & " + " \\\\"
+      s << h.map{|w| options[:escape_headers] ? escape(w) : w} * " & " + " \\\\"
       s << "\\midrule"
     end
     data.each do |row|
-      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
+      s << ((formats * " & ") % row) + " \\\\"
+#      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
     end
     s << "\\bottomrule"
     s << "\\end{tabular}"
