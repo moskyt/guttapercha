@@ -19,6 +19,20 @@ module LaTeX
     }
   end
 
+  def self.two_figures(file1, file2, caption, options = {})
+    %{
+       \\begin{figure}#{options[:placement] ? "[#{options[:placement]}]" : ''}
+          \\begin{minipage}[!t]{0.49\\textwidth}
+            \\includegraphics[width=\\textwidth]{#{file1}}
+          \\end{minipage}
+          \\begin{minipage}[!t]{0.49\\textwidth}
+            \\includegraphics[width=\\textwidth]{#{file2}}
+          \\end{minipage}
+          #{chart_caption caption, options[:label]}
+        \\end{figure}
+    }
+  end
+  
   def self.chart(file1, caption, options = {})
     %{
        \\begin{figure}#{options[:placement] ? "[#{options[:placement]}]" : ''}
@@ -50,7 +64,7 @@ module LaTeX
     "\\caption{#{label ? "\\label{#{label}} " : ""}#{caption}}"
   end
   
-  def self.document(filename, data, options = {})
+  def self.document(filename, options = {}, data = nil)
     File.open(filename, 'w') do |f|
       f.puts %{
       \\documentclass[a4paper,11pt]{article}
@@ -67,7 +81,11 @@ module LaTeX
 
       \\begin{document}  
       }
-      f.puts data
+      if data
+        f.puts data
+      elsif block_given?
+        yield(f)
+      end
       f.puts "\\end{document}"
     end
     if options[:build]
