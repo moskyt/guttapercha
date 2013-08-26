@@ -47,7 +47,7 @@ module LaTeX
     s = []
     cols = options[:columns]
     cols = cols * '' if Array === cols
-    cols = 'l' * formats.size
+    cols ||= 'l' * formats.size
     s << "\\begin{tabular}{#{cols}}"
     s << "\\toprule"
     if h = options[:headers]
