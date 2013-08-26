@@ -45,7 +45,10 @@ module LaTeX
   def self.table(formats, data, options = {})
     options = {:escape_headers => true}.merge(options)
     s = []
-    s << "\\begin{tabular}{#{'l' * formats.size}}"
+    cols = options[:columns]
+    cols = cols * '' if Array === cols
+    cols = 'l' * formats.size
+    s << "\\begin{tabular}{#{cols}}"
     s << "\\toprule"
     if h = options[:headers]
       s << h.map{|w| options[:escape_headers] ? escape(w) : w} * " & " + " \\\\"
