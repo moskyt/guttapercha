@@ -93,8 +93,8 @@ module LaTeX
     end
     if options[:build]
       Dir.chdir(File.dirname filename) do
-        `pdflatex -halt-on-error #{filename}`
-        `pdflatex -halt-on-error #{filename}`
+        `pdflatex -interaction=batchmode -halt-on-error #{filename}`
+        `pdflatex -interaction=batchmode -halt-on-error #{filename}`
       end
     end
   end
