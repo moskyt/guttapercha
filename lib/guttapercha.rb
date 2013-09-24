@@ -2,7 +2,7 @@ module LaTeX
 
   def self.escape(s)
     return "" unless s
-    s.gsub("_", "\\_").gsub("#", "\\#")
+    s.gsub("_", "\\_").gsub("#", "\\#").gsub("%", "\\%")
   end
 
   def self.two_charts(file1, file2, caption, options = {})
