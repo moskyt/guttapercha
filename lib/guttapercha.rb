@@ -45,10 +45,13 @@ module LaTeX
   def self.table(formats, data, options = {})
     options = {:escape_headers => true}.merge(options)
     s = []
-    cols = options[:columns]
-    cols = cols * '' if Array === cols
-    cols ||= 'l' * formats.size
-    s << "\\begin{tabular}{#{cols}}"
+    cols = options[:columns] || ['l'] * formats.size
+    if options[:stretch]
+#      s << "\\begin{tabular*}{\\columnwidth}{@{\\extracolsep{\\stretch{1}}}*{#{cols.size}}{r}@{}}"
+      s << "\\begin{tabular*}{\\columnwidth}{#{cols.map{|x| "@{\\extracolsep{\\stretch{1}}}*{1}{#{x}}@{}"}*''}}"
+    else
+      s << "\\begin{tabular}{#{cols*''}}"
+    end
     s << "\\toprule"
     if h = options[:headers]
       s << h.map{|w| options[:escape_headers] ? escape(w) : w} * " & " + " \\\\"
@@ -59,7 +62,11 @@ module LaTeX
 #      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
     end
     s << "\\bottomrule"
-    s << "\\end{tabular}"
+    if options[:stretch]
+      s << "\\end{tabular*}"
+    else
+      s << "\\end{tabular}"
+    end
     s * "\n"
   end
   
