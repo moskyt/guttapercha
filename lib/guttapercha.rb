@@ -58,8 +58,8 @@ module LaTeX
       s << "\\midrule"
     end
     data.each do |row|
-      s << ((formats * " & ") % row) + " \\\\"
-#      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
+#      s << ((formats * " & ") % row) + " \\\\"
+      s << (0...formats.size).map{|i| escape(formats[i] % row[i])} * " & " + " \\\\"
     end
     s << "\\bottomrule"
     if options[:stretch]
