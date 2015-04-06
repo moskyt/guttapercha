@@ -19,3 +19,5 @@ doc/
 
 # osx
 .DS_Store
+
+vendor/bundle

@@ -70,7 +70,7 @@ module LaTeX
     s * "\n"
   end
   
-  def self.chart_caption(caption, label)    
+  def self.chart_caption(caption, label = nil)    
     "\\caption{#{label ? "\\label{#{label}} " : ""}#{caption}}"
   end
   

@@ -10,4 +10,9 @@ Gem::Specification.new do |s|
 
   s.files        = Dir.glob("{lib}/**/*") # + %w(LICENSE README.md ROADMAP.md CHANGELOG.md)
   s.require_path = 'lib'
+  
+  s.add_development_dependency "rake"
+  s.add_development_dependency "minitest", "~> 5.0"
+  s.add_development_dependency "ci_reporter_minitest", "~> 1.0"
+  
 end
