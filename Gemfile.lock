@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    guttapercha (1.0.0)
+    guttapercha (1.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -23,3 +23,6 @@ DEPENDENCIES
   guttapercha!
   minitest (~> 5.0)
   rake
+
+BUNDLED WITH
+   1.11.2
