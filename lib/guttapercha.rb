@@ -91,7 +91,9 @@ module LaTeX
 
       \\begin{document}  
       }
-      if data
+      if data and block_given?
+        raise ArgumentError, "Cannot supply both data and block"
+      elsif data
         f.puts data
       elsif block_given?
         yield(f)
