@@ -1,4 +1,5 @@
 require 'erb'
+require 'pathname'
 
 class LocalBinding
   def initialize(locals)
@@ -25,7 +26,7 @@ module LaTeX
 
   def self.erb(template, filename, locals)
     erb = ERB.new(File.read(template))
-    File.write(filename, erb.result(LocalBinding.new(locals).get_binding))
+    File.write(filename, erb.result(LocalBinding.new(locals.merge({_filename: filename, _template: template})).get_binding))
   end
 
 
