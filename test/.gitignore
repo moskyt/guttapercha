@@ -1,4 +1,5 @@
 *.eps
 *.png
 *.tex
+test_template.*
 /reports

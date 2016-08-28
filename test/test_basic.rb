@@ -5,6 +5,18 @@ require 'minitest/pride'
 require_relative '../lib/guttapercha'
 
 class TestBasic < MiniTest::Test
+  
+  def test_erb
+    fn_erb = File.expand_path("template.tex.erb", File.dirname(__FILE__))
+    fn_tex = File.expand_path("test_template.tex", File.dirname(__FILE__))
+    fn_pdf = File.expand_path("test_template.pdf", File.dirname(__FILE__))
+    `rm -f #{fn_tex}`
+    `rm -f #{fn_pdf}`
+    LaTeX::template(fn_erb, fn_tex, {array: [1,2,3]})
+    assert File.exist?(fn_tex)
+    assert File.exist?(fn_pdf)
+    assert File.read(fn_tex).include?("3")
+  end
 
   def test_escape
     assert_equal "hop\\_skok", LaTeX::escape("hop_skok")

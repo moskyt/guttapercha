@@ -1,4 +1,33 @@
+require 'erb'
+
+class LocalBinding
+  def initialize(locals)
+    @locals = locals.dup
+  end
+  def method_missing(x, *args)
+    if args.empty? 
+      if @locals.has_key?(x)
+        @locals[x]
+      else
+        raise NoMethodError, "Unknown local variable #{x} in the template -- defined locals are #{@locals.keys.inspect}"
+      end
+    else
+      super
+    end 
+  end
+  def get_binding
+    return binding()
+  end
+end  
+  
+
 module LaTeX
+
+  def self.erb(template, filename, locals)
+    erb = ERB.new(File.read(template))
+    File.write(filename, erb.result(LocalBinding.new(locals).get_binding))
+  end
+
 
   def self.escape(s)
     return "" unless s
@@ -74,6 +103,18 @@ module LaTeX
     "\\caption{#{label ? "\\label{#{label}} " : ""}#{caption}}"
   end
   
+  def self.template(template, filename, locals = {})
+    erb(template, filename, locals)
+    build(filename)
+  end
+  
+  def self.build(filename)
+    Dir.chdir(File.dirname filename) do
+      `pdflatex -interaction=batchmode -halt-on-error #{filename}`
+      `pdflatex -interaction=batchmode -halt-on-error #{filename}`
+    end
+  end
+  
   def self.document(filename, options = {}, data = nil)
     File.open(filename, 'w') do |f|
       f.puts %{
@@ -100,12 +141,7 @@ module LaTeX
       end
       f.puts "\\end{document}"
     end
-    if options[:build]
-      Dir.chdir(File.dirname filename) do
-        `pdflatex -interaction=batchmode -halt-on-error #{filename}`
-        `pdflatex -interaction=batchmode -halt-on-error #{filename}`
-      end
-    end
+    build(filename) if options[:build]
   end
 
 end
